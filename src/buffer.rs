@@ -34,7 +34,7 @@ impl<T> Buffer<T> {
         unsafe {
             check_error(cudaMemcpy(
                 data.as_mut_ptr() as *mut c_void,
-                self.pointer.add(offset * size_of::<T>()),
+                self.pointer.offset((offset * size_of::<T>()) as isize),
                 size_of_val(data),
                 cudaMemcpyKind::cudaMemcpyDeviceToHost,
             ))?;
@@ -59,7 +59,7 @@ impl<T> Buffer<T> {
 
         unsafe {
             check_error(cudaMemcpy(
-                self.pointer.add(offset * size_of::<T>()),
+                self.pointer.offset((offset * size_of::<T>()) as isize),
                 data.as_ptr() as *const c_void,
                 size_of_val(data),
                 cudaMemcpyKind::cudaMemcpyHostToDevice,
