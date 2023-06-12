@@ -21,11 +21,21 @@ impl Stream {
     pub fn launch(
         &mut self,
         kernel: &Kernel,
-        grid_dim: dim3,
-        block_dim: dim3,
+        grid_dim: (u32, u32, u32),
+        block_dim: (u32, u32, u32),
         args: &Args,
         shared_mem: usize,
     ) -> Result<(), cudaError> {
+        let grid_dim = dim3 {
+            x: grid_dim.0,
+            y: grid_dim.1,
+            z: grid_dim.2,
+        };
+        let block_dim = dim3 {
+            x: block_dim.0,
+            y: block_dim.1,
+            z: block_dim.2,
+        };
         unsafe {
             check_error(cudaLaunchKernel(
                 kernel.function,
