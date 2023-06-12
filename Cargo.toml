@@ -1,0 +1,7 @@
+[package]
+name = "cuda-interface"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cuda-runtime-sys = "0.3.0-alpha.1"
