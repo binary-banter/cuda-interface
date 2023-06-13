@@ -14,7 +14,7 @@ pub struct Args<'a> {
 
 impl<'a> Args<'a> {
     /// Add a new argument to `Args`.
-    pub fn add_arg(&mut self, arg: impl ToArg) {
+    pub fn add_arg(&mut self, arg: impl ToArg<'a>) {
         self.args.push(arg.to_arg());
     }
 
@@ -25,20 +25,20 @@ impl<'a> Args<'a> {
 }
 
 /// This trait allows types to be added to `Args`.
-pub trait ToArg {
+pub trait ToArg<'a> {
     /// Turns `self` into pointer.
     fn to_arg(self) -> *mut c_void;
 }
 
-impl ToArg for &mut u32 {
+impl<'a, T> ToArg<'a> for &'a mut Buffer<T> {
     fn to_arg(self) -> *mut c_void {
-        self as *mut u32 as *mut c_void
+        (&mut self.pointer) as *mut *mut c_void as *mut c_void
     }
 }
 
-impl<T> ToArg for &mut Buffer<T> {
+impl<'a> ToArg<'a> for &'a u32 {
     fn to_arg(self) -> *mut c_void {
-        (&mut self.pointer) as *mut *mut c_void as *mut c_void
+        self as *const u32 as *mut u32 as *mut c_void
     }
 }
 
