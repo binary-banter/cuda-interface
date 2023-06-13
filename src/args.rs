@@ -42,4 +42,10 @@ impl<'a> ToArg<'a> for &'a u32 {
     }
 }
 
+impl<'a> ToArg<'a> for &'a f32 {
+    fn to_arg(self) -> *mut c_void {
+        self as *const f32 as *mut f32 as *mut c_void
+    }
+}
+
 // todo: use a macro to autogenerate a bunch of standard types (e.g. u8, u16, etc.)
